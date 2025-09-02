@@ -1,6 +1,6 @@
 using API.Data;
 using API.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -10,16 +10,16 @@ namespace API.Controllers;
 public class MembersController(AppDataContext context) : ControllerBase
 {
     [HttpGet]
-    public ActionResult<IReadOnlyList<AppUser>> GetMembers()
+    public async Task<ActionResult<IReadOnlyList<AppUser>>> GetMembers()
     {
-        var members = context.Users.ToList();
+        var members = await context.Users.ToListAsync();
         return members;
     }
 
     [HttpGet("{id}")]
-    public ActionResult<AppUser> GetMember(string id)
+    public async Task<ActionResult<AppUser>> GetMember(string id)
     {
-        var user = context.Users.Find(id);
+        var user =  await context.Users.FindAsync(id);
         if (user == null) return NotFound();
         return user;
     }
