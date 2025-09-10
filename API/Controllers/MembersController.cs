@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("api/[controller]")] //localhost:5001/api/members
-[ApiController]
-public class MembersController(AppDataContext context) : ControllerBase
+public class MembersController(AppDataContext context) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<AppUser>>> GetMembers()
