@@ -39,4 +39,24 @@ public class AccountController(AppDataContext context) : BaseApiController
     {
         return await context.Users.AnyAsync(user => user.Email.ToLower() == email.ToLower());
     }
+
+
+    [HttpPost("login")]
+    public async Task<ActionResult<AppUser>> login(LoginRequest request)
+    {
+        var user = await context.Users.SingleOrDefaultAsync(user => user.Email == request.Email);
+
+        if (user == null) return Unauthorized("Invalid email or password");
+
+        using var hmac = new HMACSHA512(user.PasswordSalt);
+
+        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Password));
+
+        for (var i = 0; i < computedHash.Length; i++)
+        {
+            if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid email or password");
+        }
+
+        return user;
+    }
 }
