@@ -3,15 +3,17 @@ using System.Text;
 using API.Data;
 using API.DTOS;
 using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AccountController(AppDataContext context) : BaseApiController
+
+public class AccountController(AppDataContext context, ITokenService tokenService) : BaseApiController
 {
     [HttpPost("Register")]
-    public async Task<ActionResult<AppUser>> Register(RegisterRequest request)
+    public async Task<ActionResult<UserResponse>> Register(RegisterRequest request)
     {
         using var hmac = new HMACSHA512();
 
@@ -31,7 +33,14 @@ public class AccountController(AppDataContext context) : BaseApiController
         context.Add(user);
         await context.SaveChangesAsync();
 
-        return user;
+        var token = tokenService.CreateToken(user);
+        return new UserResponse
+        {
+            Id = user.Id,
+            DisplayName = user.DisplayName,
+            Email = user.Email,
+            Token = token
+        };
 
     }
 
@@ -42,7 +51,7 @@ public class AccountController(AppDataContext context) : BaseApiController
 
 
     [HttpPost("login")]
-    public async Task<ActionResult<AppUser>> login(LoginRequest request)
+    public async Task<ActionResult<UserResponse>> login(LoginRequest request)
     {
         var user = await context.Users.SingleOrDefaultAsync(user => user.Email == request.Email);
 
@@ -57,6 +66,14 @@ public class AccountController(AppDataContext context) : BaseApiController
             if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid email or password");
         }
 
-        return user;
+        var token = tokenService.CreateToken(user);
+
+        return new UserResponse
+        {
+            Id = user.Id,
+            DisplayName = user.DisplayName,
+            Email = user.Email,
+            Token = token
+        };
     }
 }
