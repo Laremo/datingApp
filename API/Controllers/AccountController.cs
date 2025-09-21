@@ -3,6 +3,7 @@ using System.Text;
 using API.Data;
 using API.DTOS;
 using API.Entities;
+using API.Extensions;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,14 +34,8 @@ public class AccountController(AppDataContext context, ITokenService tokenServic
         context.Add(user);
         await context.SaveChangesAsync();
 
-        var token = tokenService.CreateToken(user);
-        return new UserResponse
-        {
-            Id = user.Id,
-            DisplayName = user.DisplayName,
-            Email = user.Email,
-            Token = token
-        };
+        return user.ToDto(tokenService);
+
 
     }
 
@@ -66,14 +61,7 @@ public class AccountController(AppDataContext context, ITokenService tokenServic
             if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid email or password");
         }
 
-        var token = tokenService.CreateToken(user);
 
-        return new UserResponse
-        {
-            Id = user.Id,
-            DisplayName = user.DisplayName,
-            Email = user.Email,
-            Token = token
-        };
+        return user.ToDto(tokenService);
     }
 }
