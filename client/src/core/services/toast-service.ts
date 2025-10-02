@@ -17,7 +17,8 @@ export class ToastService {
     }
   }
 
-  private createToastElement(message: string, alertClass: string, duration?: number): void {
+  private createToastElement(message: string, alertClass: string, duration = 5000): void {
+    
     const toastContainer = document.getElementById('toast-container');
     if (!toastContainer) return;
 
