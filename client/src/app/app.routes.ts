@@ -4,7 +4,7 @@ import { MemberList } from '../features/members/member-list/member-list';
 import { MemberDetail } from '../features/members/member-detail/member-detail';
 import { Messages } from '../features/messages/messages';
 import { authGuard } from '../core/guard/auth-guard';
-
+import { TestErrors } from '../features/test-errors/test-errors';
 export const routes: Routes = [
   {
     path: '',
@@ -33,6 +33,7 @@ export const routes: Routes = [
       },
     ],
   },
+  { path: 'errors', component: TestErrors },
   {
     path: '**',
     component: Home,
