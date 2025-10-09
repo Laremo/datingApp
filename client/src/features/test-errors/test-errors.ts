@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 
 @Component({
   selector: 'app-test-errors',
@@ -15,12 +15,16 @@ export class TestErrors {
   private http = inject(HttpClient);
 
   baseUrl = 'https://localhost:7121/api/';
+  validationErrors = signal<string[]>([]);
 
   get400ValidationError(): void {
     this.http.post(this.baseUrl + 'account/register', {}).subscribe({
       next: (response) => console.log(response),
 
-      error: (error) => console.log(error),
+      error: (error) => {
+        console.log(error);
+        this.validationErrors.set(error);
+      },
     });
   }
 

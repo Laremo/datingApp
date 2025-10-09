@@ -7,7 +7,6 @@ public class ErrorController : BaseApiController
     [HttpGet("bad-request")]
     public IActionResult GetBadRequest() // 400
     {
-        // throw new Exception("This is a bad request");
         return BadRequest("Bad Request");
     }
 
