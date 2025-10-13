@@ -12,4 +12,10 @@ public class AppUser
 
 
     public required byte[] PasswordSalt { get; set; }
+
+    public string? ImageUrl { get; set; }
+
+    // Navigation properties
+    public Member Member { get; set; } = null!;
+
 }
