@@ -17,6 +17,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDataContext>(opt => opt.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
 builder.Services.AddScoped<ITokenService, TokenService>();
+/*Creates an instance of Members Repository for each call*/
+builder.Services.AddScoped<IMembersRepository, MembersRepository>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     var tokenKey = builder.Configuration["TokenKey"]
