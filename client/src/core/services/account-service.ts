@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { inject, Injectable, signal } from '@angular/core';
-import { User } from '../../types/user';
-import { RegisterCreds } from '../../types/registerCreds';
+import { RegisterCreds, User } from '../../types/user';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -25,16 +25,16 @@ export class AccountService {
     return this.http.post<User>(this.baseUrl + 'account/login', creds).pipe(
       tap((user) => {
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUser.set(user);
+          this.setCurrentUser(user);
         }
       })
     );
   }
-
+  
   setCurrentUser(user: User) {
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUser.set(user);
+    console.log(this.currentUser())
   }
 
   logout(): void {
