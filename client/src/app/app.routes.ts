@@ -22,7 +22,7 @@ export const routes: Routes = [
         component: MemberList,
       },
       {
-        path: 'members/{id}',
+        path: 'members/:id',
         component: MemberDetail,
       },
       {
