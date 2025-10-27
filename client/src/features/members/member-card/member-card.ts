@@ -1,9 +1,9 @@
 import { Component, input } from '@angular/core';
 import { Member } from '../../../types/Member';
-
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-member-card',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './member-card.html',
   styleUrl: './member-card.css',
 })
