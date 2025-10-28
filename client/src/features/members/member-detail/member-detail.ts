@@ -4,9 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Member } from '../../../types/Member';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 @Component({
   selector: 'app-member-detail',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, RouterLink, RouterLinkActive],
   templateUrl: './member-detail.html',
   styleUrl: './member-detail.css',
 })
@@ -17,7 +18,6 @@ export class MemberDetail implements OnInit {
 
   ngOnInit(): void {
     this.member$ = this.loadMember();
-    
   }
 
   loadMember(): Observable<Member> | undefined {
