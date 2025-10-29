@@ -1,0 +1,17 @@
+import { ResolveFn, Router } from '@angular/router';
+import { MembersService } from '../../core/services/members-service';
+import { inject } from '@angular/core';
+import { Member } from '../../types/Member';
+import { EMPTY } from 'rxjs';
+
+export const resolverResolver: ResolveFn<Member> = (route, state) => {
+  const membersService = inject(MembersService);
+  const router = inject(Router);
+  const memberId = route.paramMap.get('id');
+
+  if (memberId) return membersService.getMember(memberId);
+
+  router.navigateByUrl('/not-found');
+
+  return EMPTY;
+};
