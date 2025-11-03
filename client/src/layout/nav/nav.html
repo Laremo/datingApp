@@ -21,7 +21,12 @@
     </a>
     <nav class="flex gap-3 my-2 text-lg text-white">
       @if(accountService.currentUser()) {
-      <a routerLink="/members" routerLinkActive="text-accent">Matches</a>
+      <a
+        routerLink="/members"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="text-accent"
+        >Matches</a
+      >
       <a routerLink="/lists" routerLinkActive="text-accent">Lists</a>
       <a routerLink="/messages" routerLinkActive="text-accent">Messages</a>
       <a routerLink="/errors" routerLinkActive="text-accent">Errors</a>
@@ -35,7 +40,11 @@
           role="button"
           class="flex items-center gap-2 text-white text-xl cursor-pointer"
         >
-          <img [src]="user?.imageUrl || './user.png'" alt="user avatar" class="w-8 h-8 rounded-full object-cover" />
+          <img
+            [src]="user?.imageUrl || './user.png'"
+            alt="user avatar"
+            class="w-8 h-8 rounded-full object-cover"
+          />
           <span class="pl-2">{{ user.displayName }}</span>
         </div>
         <ul
