@@ -9,4 +9,9 @@ export const themes = [
   'retro',
   'cyberpunk',
   'valentine',
+  'forest',
+  'luxury',
+  'abyss',
+  'coffee',
+  'night',
 ];

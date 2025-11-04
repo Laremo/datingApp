@@ -61,7 +61,7 @@
         >
           @for(theme of themes; track $index){
           <li (click)="handleSelectedTheme(theme)">
-            <a>{{ theme }}</a>
+            <a class="capitalize">{{ theme }}</a>
           </li>
           }
         </ul>
