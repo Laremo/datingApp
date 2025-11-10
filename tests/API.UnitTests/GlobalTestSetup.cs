@@ -19,6 +19,7 @@ public class GlobalTestSetup
         AppDataContext = new AppDataContext(options);
 
         await AppDataContext.Database.MigrateAsync();
+        await Seed.Seed.SeedUsers(AppDataContext);
 
     }
 
