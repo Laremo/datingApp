@@ -1,0 +1,24 @@
+meta {
+  name: Members - Unauthorized
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://localhost:7121/api/members/
+  body: none
+  auth: none
+}
+
+tests {
+  test("Should return Unauthorized", function() {
+    expect(res.getStatus()).to.equal(401);
+  });
+  
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

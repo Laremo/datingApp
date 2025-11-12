@@ -1,0 +1,28 @@
+meta {
+  name: Member - Not Found
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://localhost:7121/api/members/bob
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{authToken}}
+}
+
+tests {
+  test("Should return Not found", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+  
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

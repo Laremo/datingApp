@@ -1,0 +1,31 @@
+meta {
+  name: Login - Unauthorized Bad Email
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://localhost:7121/api/account/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "arenita@tst.com",
+    "password": "password"
+  }
+}
+
+tests {
+  test("Should return 401 Unauthorized", function() {
+    expect(res.getStatus()).to.equal(401);
+  })
+  
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
