@@ -43,7 +43,7 @@ public class Seed
                     City = seedUser.City,
                     Country = seedUser.Country,
                     Description = seedUser.Description,
-                    BirthDay = seedUser.BitrhDay,
+                    BirthDay = seedUser.BirthDay,
                     ImageUrl = seedUser.ImageUrl,
                     LastActive = seedUser.LastActive,
                     Created = seedUser.Created

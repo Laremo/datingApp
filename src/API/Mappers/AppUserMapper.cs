@@ -2,9 +2,9 @@ using API.DTOS;
 using API.Entities;
 using API.Interfaces;
 
-namespace API.Extensions;
+namespace API.Mappers;
 
-public static class AppUserExtensions
+public static class AppUserMapper
 {
     public static UserResponse ToDto(this AppUser appUser, ITokenService tokenService)
     {
@@ -15,10 +15,10 @@ public static class AppUserExtensions
             Id = appUser.Id,
             DisplayName = appUser.DisplayName,
             Email = appUser.Email,
+            ImageURL = appUser.ImageUrl,
             Token = token
         };
     }
 
-    
+
 }
-              
