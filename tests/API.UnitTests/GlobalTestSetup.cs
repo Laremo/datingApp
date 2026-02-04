@@ -6,27 +6,23 @@ namespace API.UnitTests;
 [SetUpFixture]
 public class GlobalTestSetup
 {
-   
-
-    public static AppDataContext AppDataContext { get; private set; }
+    public static AppDbContext AppDbContext { get; private set; }
 
     [OneTimeSetUp]
     public async Task Setup()
     {
-        DbContextOptions<AppDataContext> options = new DbContextOptionsBuilder<AppDataContext>()
-        .UseSqlite("Data source=dating.db").Options;
+        DbContextOptions<AppDbContext> options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseSqlite("Data source=dating.db")
+            .Options;
 
-        AppDataContext = new AppDataContext(options);
-
-        await AppDataContext.Database.MigrateAsync();
-        await Seed.Seed.SeedUsers(AppDataContext);
-
+        AppDbContext = new AppDbContext(options);
+        await AppDbContext.Database.MigrateAsync();
+        await Seed.SeedUsers(AppDbContext);
     }
 
     [OneTimeTearDown]
     public async Task TearDown()
     {
-        await AppDataContext.DisposeAsync();
+        await AppDbContext.DisposeAsync();
     }
-
 }
