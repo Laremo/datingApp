@@ -4,11 +4,13 @@ using System.Text.Json.Serialization;
 using API.Data;
 using API.Interfaces;
 using API.Middlewares;
-using API.Seed;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NSwag;
+
+namespace API;
 
 [ExcludeFromCodeCoverage]
 public static class Program
@@ -34,13 +36,37 @@ public static class Program
         AddDbContext(builder);
         AddScopedServices(builder);
 
+        builder.Services.AddOpenApiDocument(options =>
+        {
+            options.PostProcess = document =>
+            {
+                document.Info = new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Dating API",
+                    Description = "An ASP.NET Core Web API for managing Dating items",
+                    TermsOfService = "https://example.com/terms",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Example Contact",
+                        Url = "https://example.com/contact"
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Example License",
+                        Url = "https://example.com/license"
+                    }
+                };
+            };
+        });
+
         WebApplication app = builder.Build();
 
         using var scope = app.Services.CreateScope();
         var services = scope.ServiceProvider;
         try
         {
-            var context = services.GetRequiredService<AppDataContext>();
+            var context = services.GetRequiredService<AppDbContext>();
             context.Database.Migrate();
             Task.Run(() => Seed.SeedUsers(context));
         }
@@ -62,6 +88,13 @@ public static class Program
             ));
 
             app.UseDeveloperExceptionPage();
+            app.UseOpenApi();
+            app.UseSwaggerUi();
+
+            app.UseReDoc(options =>
+            {
+                options.Path = "/redoc";
+            });
         }
         app.UseAuthentication();
         app.UseAuthorization();
@@ -90,7 +123,7 @@ public static class Program
 
     private static void AddDbContext(WebApplicationBuilder builder)
     {
-        builder.Services.AddDbContext<AppDataContext>(opt =>
+        builder.Services.AddDbContext<AppDbContext>(opt =>
         {
             opt.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection"));
         });
