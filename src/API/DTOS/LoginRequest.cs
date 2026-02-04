@@ -1,6 +1,4 @@
-using System;
-
-namespace API.DTOS;
+namespace API.DTOs;
 
 public class LoginRequest
 {

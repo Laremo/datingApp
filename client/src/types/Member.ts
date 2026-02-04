@@ -5,7 +5,7 @@ export interface Member {
   displayName: string;
   created: string;
   lastActive: string;
-  gender: 'male' | 'female' | 'other';
+  gender: string;
   description?: string;
   city: string;
   country: string;
@@ -14,6 +14,6 @@ export interface Member {
 export interface Photo {
   id: number;
   url: string;
-  publicId?: string | null;
+  publicId?: string;
   memberId: string;
 }
