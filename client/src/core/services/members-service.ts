@@ -5,19 +5,19 @@ import { Member, Photo } from '../../types/member';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MembersService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
-  editmode = signal(false);
+  editMode = signal(false);
 
   getMember(id: string): Observable<Member> {
-    return this.http.get<Member>(this.baseUrl + "members/" + id);
+    return this.http.get<Member>(this.baseUrl + 'members/' + id);
   }
 
   getMembers(): Observable<Member[]> {
-    return this.http.get<Member[]>(this.baseUrl + "members");
+    return this.http.get<Member[]>(this.baseUrl + 'members');
   }
 
   getPhotos(id: string) {

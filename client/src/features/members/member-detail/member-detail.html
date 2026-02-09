@@ -32,9 +32,9 @@
         @if (isCurrentUser()) {
           <button
             class="btn btn-outline btn-primary"
-            (click)="membersService.editmode.set(!membersService.editmode())"
+            (click)="membersService.editMode.set(!membersService.editMode())"
           >
-            {{ membersService.editmode() ? 'Cancel' : 'Edit' }}
+            {{ membersService.editMode() ? 'Cancel' : 'Edit' }}
           </button>
         }
       </div>
