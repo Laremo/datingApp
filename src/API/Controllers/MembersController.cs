@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [Authorize]
-public class MembersController(IMembersRepository membersRepository) : BaseApiController
+public class MembersController(IMembersRepository membersRepository, IPhotoService photoService) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers()
@@ -32,6 +32,46 @@ public class MembersController(IMembersRepository membersRepository) : BaseApiCo
     public async Task<ActionResult<IReadOnlyList<Photo>>> GetPhotos(string id)
     {
         return Ok(await membersRepository.GetPhotosAsync(id));
+    }
+
+    [HttpPost("photo")]
+    public async Task<ActionResult<Photo>> AddPhoto([FromForm] IFormFile file)
+    {
+        var member = await membersRepository.GetMemberForUpdateAsync(User.GetMemberId());
+
+        if (member == null)
+        {
+            return NotFound("Member not found");
+        }
+
+        var result = await photoService.UploadPhotoAsync(file);
+
+        if (result.Error != null)
+        {
+            return BadRequest(result.Error.Message);
+        }
+
+        var photo = new Photo
+        {
+            Url = result.SecureUrl.AbsoluteUri,
+            PublicId = result.PublicId,
+            MemberId = User.GetMemberId()
+        };
+
+        if (member.ImageUrl == null)
+        {
+            member.ImageUrl = photo.Url;
+            member.User.ImageUrl = photo.Url;
+        }
+
+        member.Photos.Add(photo);
+
+        if (await membersRepository.SaveAllAsync())
+        {
+            return photo;
+        }
+
+        return BadRequest("Somehting went wrong!");
     }
 
     [HttpPut]
