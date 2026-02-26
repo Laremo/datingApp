@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [Authorize]
-public class MembersController(IMembersRepository membersRepository, IPhotoService photoService) : BaseApiController
+public class MembersController(IMembersRepository membersRepository,
+    IPhotoService photoService) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers()
@@ -32,6 +33,34 @@ public class MembersController(IMembersRepository membersRepository, IPhotoServi
     public async Task<ActionResult<IReadOnlyList<Photo>>> GetPhotos(string id)
     {
         return Ok(await membersRepository.GetPhotosAsync(id));
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> UpdateMember(MemberUpdateRequest request)
+    {
+        var memberId = User.GetMemberId();
+        var member = await membersRepository.GetMemberForUpdateAsync(memberId);
+
+        if (member == null)
+        {
+            return BadRequest("Failed to get member");
+        }
+
+        member.DisplayName = request.DisplayName ?? member.DisplayName;
+        member.Description = request.Description ?? member.Description;
+        member.City = request.City ?? member.City;
+        member.Country = request.Country ?? member.Country;
+
+        member.User.DisplayName = request.DisplayName ?? member.User.DisplayName;
+
+        membersRepository.Update(member);
+
+        if (await membersRepository.SaveAllAsync())
+        {
+            return NoContent();
+        }
+
+        return BadRequest("Failed to update profile");
     }
 
     [HttpPost("photo")]
@@ -74,48 +103,67 @@ public class MembersController(IMembersRepository membersRepository, IPhotoServi
         return BadRequest("Somehting went wrong!");
     }
 
-    [HttpPut]
-    public async Task<ActionResult> UpdateMember(MemberUpdateRequest request)
+    [HttpPut("photo/{photoId}")]
+    public async Task<ActionResult> SetMainPhoto(int photoId)
     {
-        var memberId = User.GetMemberId();
-        var member = await membersRepository.GetMemberForUpdateAsync(memberId);
+        var member = await membersRepository.GetMemberForUpdateAsync(User.GetMemberId());
 
         if (member == null)
         {
-            return BadRequest("Failed to get member");
+            return BadRequest("Token not available in member");
         }
 
-        member.DisplayName = request.DisplayName ?? member.DisplayName;
-        member.Description = request.Description ?? member.Description;
-        member.City = request.City ?? member.City;
-        member.Country = request.Country ?? member.Country;
-        member.User.DisplayName = request.DisplayName ?? member.User.DisplayName;
-        membersRepository.Update(member);
+        var photo = member.Photos.SingleOrDefault(p => p.Id == photoId);
+
+        if (member.ImageUrl == photo?.Url || photo == null)
+        {
+            return BadRequest("Cannot set photo as main");
+        }
+
+        member.ImageUrl = photo.Url;
+        member.User.ImageUrl = photo.Url;
 
         if (await membersRepository.SaveAllAsync())
         {
             return NoContent();
         }
 
-        return BadRequest("Failed to update profile");
+        return BadRequest("Some error happened while setting main photo");
     }
 
-    [HttpPut("photo/{photoId}")]
-    public async Task<ActionResult> SetMainPhoto(int photoId)
+    [HttpDelete("photo/{photoId}")]
+    public async Task<ActionResult> DeletePhoto(int photoId)
     {
         var member = await membersRepository.GetMemberForUpdateAsync(User.GetMemberId());
 
-        if (member == null) return BadRequest("Token not available in member");
+        if (member == null)
+        {
+            return BadRequest("Token not available in member");
+        }
 
         var photo = member.Photos.SingleOrDefault(p => p.Id == photoId);
 
-        if (member.ImageUrl == photo?.Url || photo == null) return BadRequest("Cannot set photo as main");
+        if (photo == null || photo.Url == member.ImageUrl)
+        {
+            return BadRequest("This photo is not deletable or it is your main photo");
+        }
 
-        member.ImageUrl = photo.Url;
-        member.User.ImageUrl = photo.Url;
+        if (photo.PublicId != null)
+        {
+            var result = await photoService.DeletePhotoAsync(photo.PublicId);
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
+        }
 
-        if (await membersRepository.SaveAllAsync()) return NoContent();
+        member.Photos.Remove(photo);
 
-        return BadRequest("Some error happened while setting main photo");
+        if (await membersRepository.SaveAllAsync())
+        {
+            return Ok();
+        }
+
+        return BadRequest("There was a problem while deleting your photo");
     }
 }
