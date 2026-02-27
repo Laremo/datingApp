@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using API.Data;
 using API.Interfaces;
 using API.Middlewares;
+using API.Helpers;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -133,5 +134,7 @@ public static class Program
     {
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IMembersRepository, MembersRepository>();
+        builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
     }
 }
