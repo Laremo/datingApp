@@ -12,7 +12,12 @@
       </label>
       <label class="floating-label">
         <span>Password</span>
-        <input class="input w-full" formControlName="password" placeholder="Password" />
+        <input
+          class="input w-full"
+          formControlName="password"
+          placeholder="Password"
+          type="password"
+        />
       </label>
       <label class="floating-label">
         <span>Confirm Password</span>
@@ -20,11 +25,14 @@
           class="input w-full"
           formControlName="confirmPassword"
           placeholder="Confirm Password"
+          type="password"
         />
       </label>
       <div class="flex flex-col items-start px-3 w-full mockup-code text-lg">
-        <div>Form value: {{ registerForm.value | json }}</div>
-        <div>Form status: {{ registerForm.status | json }}</div>
+        <button class="btn" (click)="cancel()" type="button">Cancel</button>
+        <button class="btn btn-primary" [disabled]="!registerForm.valid" type="submit">
+          Register
+        </button>
       </div>
     </form>
   </div>
