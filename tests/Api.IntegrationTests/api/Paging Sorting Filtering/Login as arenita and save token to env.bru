@@ -12,9 +12,13 @@ post {
 
 body:json {
   {
-  	"email": "arenita@test.com",
-  	"password": "Pa$$w0rd"
+    "email": "arenita@test.com",
+    "password": "Pa$$w0rd"
   }
+}
+
+vars:pre-request {
+  baseUrl: https://localhost:5001
 }
 
 tests {
