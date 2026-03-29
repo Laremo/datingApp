@@ -11,7 +11,7 @@
               type="radio"
               class="btn"
               aria-label="Female"
-              [(ngModel)]="memberParams.gender"
+              [(ngModel)]="memberParams().gender"
               name="gender"
               value="female"
             />
@@ -19,7 +19,7 @@
               type="radio"
               class="btn"
               aria-label="Male"
-              [(ngModel)]="memberParams.gender"
+              [(ngModel)]="memberParams().gender"
               name="gender"
               value="male"
             />
@@ -32,7 +32,7 @@
               type="number"
               class="input w-20"
               [min]="18"
-              [(ngModel)]="memberParams.minAge"
+              [(ngModel)]="memberParams().minAge"
               (change)="onMinAgeChange()"
             />
             <input
@@ -40,13 +40,13 @@
               class="input w-20"
               [min]="18"
               [max]="120"
-              [(ngModel)]="memberParams.maxAge"
+              [(ngModel)]="memberParams().maxAge"
               (change)="onMaxAgeChange()"
             />
           </div>
           <label class="flex justify-between items-center">
             <span class="font-semibold">Order by: </span>
-            <select name="orderBy" class="select" [(ngModel)]="memberParams.orderBy">
+            <select name="orderBy" class="select" [(ngModel)]="memberParams().orderBy">
               <option disabled selected>Order by</option>
               <option value="created">Newest members</option>
               <option value="lastActive">Last active members</option>
