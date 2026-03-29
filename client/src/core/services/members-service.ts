@@ -30,7 +30,12 @@ export class MembersService {
     params = params.append('maxAge', memberParams.maxAge);
     params = params.append('orderBy', memberParams.orderBy);
     if (memberParams.gender) params = params.append('gender', memberParams.gender);
-    return this.http.get<PaginationResult<Member>>(this.baseUrl + 'members', { params });
+    
+    return this.http.get<PaginationResult<Member>>(this.baseUrl + 'members', { params }).pipe(
+      tap(() => {
+        localStorage.setItem('filters', JSON.stringify(memberParams));
+      }),
+    );
   }
 
   getPhotos(id: string) {
