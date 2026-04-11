@@ -4,6 +4,10 @@ meta {
   seq: 5
 }
 
+headers {
+  Authorization: Bearer {{token}}
+}
+
 get {
   url: {{baseUrl}}/api/members
   body: none
