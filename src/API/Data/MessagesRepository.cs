@@ -1,27 +1,27 @@
-// using API.DTOs;
-// using API.Entities;
-// using API.Helpers;
-// using API.Interfaces;
+using API.DTOs;
+using API.Entities;
+using API.Helpers;
+using API.Interfaces;
 
-// namespace API.Data;
+namespace API.Data;
 
-// public class MessagesRepository(AppDbContext context) : IMessagesRepository
-// {
-//     public void Add(Message message) => context.Messages.Add(message);
+public class MessagesRepository(AppDbContext context) : IMessagesRepository
+{
+    public void Add(Message message) => context.Messages.Add(message);
 
-//     public void Delete(Message message) => context.Messages.Remove(message);
+    public void Delete(Message message) => context.Messages.Remove(message);
 
-//     public async Task<Message?> Get(string messageId) => await context.Messages.FindAsync(messageId);
+    public async Task<Message?> Get(string messageId) => await context.Messages.FindAsync(messageId);
 
-//     public async Task<PaginationResult<MessageResponse>> GetForMember()
-//     {
+    public async Task<PaginationResult<MessageResponse>> GetForMember()
+    {
 
-//     }
+    }
 
-//     public async Task<IReadOnlyList<MessageResponse>> GetThread(string currentMemberId, string recipientId)
-//     {
+    public async Task<IReadOnlyList<MessageResponse>> GetThread(string currentMemberId, string recipientId)
+    {
 
-//     }
+    }
 
-//     public async Task<bool> SaveAllAsync() => await context.SaveChangesAsync() > 0;
-// }
+    public async Task<bool> SaveAllAsync() => await context.SaveChangesAsync() > 0;
+}

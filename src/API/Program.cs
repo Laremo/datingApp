@@ -134,7 +134,7 @@ public static class Program
     {
         // Services & repositories
         builder.Services.AddScoped<IMembersRepository, MembersRepository>();
-      //  builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
+        builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
         builder.Services.AddScoped<ILikesRepository, LikesRepository>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IPhotoService, PhotoService>();
