@@ -12,24 +12,29 @@ post {
 
 body:json {
   {
-  	"email": "arenita@test.com",
-  	"password": "Pa$$w0rd"
+    "email": "arenita@test.com",
+    "password": "Pa$$w0rd"
   }
 }
 
-script:post-response {
-  const user = res.getBody();
+vars:pre-request {
+  baseUrl: https://localhost:5001
+}
+
+tests {
+  test("Should be able to login", function() {
+    expect(res.getStatus()).to.equal(200);
   
   test("Has properties", function () {
       expect(user).to.have.property('username');
       expect(user).to.have.property('token');
   });
   
-  if (test("Has properties")) {
-      bru.setGlobalEnvVar('token', user.token);
-  }
+  const data = res.body;
+  bru.setEnvVar('arenitaToken', data.token);
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

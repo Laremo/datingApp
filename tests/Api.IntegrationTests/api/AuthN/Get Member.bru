@@ -3,7 +3,9 @@ meta {
   type: http
   seq: 6
 }
-
+headers {
+  Authorization: Bearer {{token}}
+}
 get {
   url: {{baseUrl}}/api/members/arenita-id
   body: none
@@ -12,5 +14,4 @@ get {
 
 settings {
   encodeUrl: true
-  timeout: 0
 }
