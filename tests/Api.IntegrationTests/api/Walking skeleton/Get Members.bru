@@ -7,7 +7,11 @@ meta {
 get {
   url: {{baseUrl}}/api/members
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFyZW5pdGFAdGVzdC5jb20iLCJuYW1laWQiOiJhcmVuaXRhLWlkIiwibmJmIjoxNzc5MDc0ODg0LCJleHAiOjE3Nzk2Nzk2ODQsImlhdCI6MTc3OTA3NDg4NH0.nwq4ydRoLlhZsPOeAYyfXeuDVvKfJUOnGRm2HQYKIkF4nbCSeDVva95_5yAOIggF3C5eDkROQjju18UdHtuIYA
 }
 
 vars:pre-request {
