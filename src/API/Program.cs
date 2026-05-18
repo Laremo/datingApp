@@ -54,7 +54,7 @@ public static class Program
         }
         catch (Exception ex)
         {
-            var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("Program");
+            var logger = services.GetRequiredService<ILogger>();
             logger.LogError(ex, "Migration process failed!");
         }
 
@@ -81,7 +81,6 @@ public static class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
-
         app.Run();
     }
 
@@ -101,6 +100,9 @@ public static class Program
                     ValidateAudience = false
                 };
             });
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
+            .AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
     }
 
     private static void AddDbContext(WebApplicationBuilder builder)
