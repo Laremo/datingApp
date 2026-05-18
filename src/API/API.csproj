@@ -14,6 +14,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.7" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.7.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
@@ -35,16 +36,22 @@
     </ItemGroup>
     <Delete Files="@(FilesToDelete)" />
   </Target>
-  
-  <!-- <Target Name="NSwag" BeforeTargets="CoreCompile;PrepareResource" Condition="'$(EFProject)' == ''">
-    <Exec EnvironmentVariables="DOTNET_ROLL_FORWARD=Major" Command="$(NSwagExe_Net100) run /runtime:Net100 /variables:OutputPath=$(MSBuildProjectDirectory)/$(IntermediateOutputPath)" WorkingDirectory="../../nswag" />
+
+  <!-- <Target Name="NSwag" BeforeTargets="CoreCompile;PrepareResource" Condition="'$(EFProject)' ==
+  ''">
+    <Exec EnvironmentVariables="DOTNET_ROLL_FORWARD=Major" Command="$(NSwagExe_Net100) run
+  /runtime:Net100 /variables:OutputPath=$(MSBuildProjectDirectory)/$(IntermediateOutputPath)"
+  WorkingDirectory="../../nswag" />
     <ItemGroup>
       <Compile Include="$(IntermediateOutputPath)/*.generated.cs" />
     </ItemGroup>
   </Target>
   
   <Target Name="NSwagSpec" AfterTargets="Build" Condition="'$(EFProject)' == ''">
-    <Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development;DOTNET_ROLL_FORWARD=Major" WorkingDirectory="../../nswag/document-generator" Command="$(NSwagExe_Net100) run openapi.nswag /variables:Configuration=$(Configuration),Project=$(MSBuildProjectDirectory)/$(MSBuildProjectFile),MsBuildOutputPath=$(MSBuildProjectDirectory)/$(OutDir)" />
+    <Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development;DOTNET_ROLL_FORWARD=Major"
+  WorkingDirectory="../../nswag/document-generator" Command="$(NSwagExe_Net100) run openapi.nswag
+  /variables:Configuration=$(Configuration),Project=$(MSBuildProjectDirectory)/$(MSBuildProjectFile),MsBuildOutputPath=$(MSBuildProjectDirectory)/$(OutDir)"
+  />
   </Target> -->
 
 </Project>
