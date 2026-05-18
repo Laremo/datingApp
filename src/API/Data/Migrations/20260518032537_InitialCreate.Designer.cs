@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260411215327_MessageEntityAdded")]
-    partial class MessageEntityAdded
+    [Migration("20260518032537_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.8");
 
             modelBuilder.Entity("API.Entities.AppUser", b =>
                 {

@@ -4,14 +4,14 @@ meta {
   seq: 4
 }
 
-headers {
-  Authorization: Bearer {{token}}
-}
-
 post {
   url: {{baseUrl}}/api/account/login
   body: json
   auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{token}}
 }
 
 body:json {
@@ -19,6 +19,10 @@ body:json {
     "email": "arenita@test.com",
     "password": "Pa$$w0rd"
   }
+}
+
+vars:pre-request {
+  baseUrl: https://localhost:5001
 }
 
 tests {
@@ -32,4 +36,5 @@ tests {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
