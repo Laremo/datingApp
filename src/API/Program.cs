@@ -73,7 +73,7 @@ public static class Program
         }
         catch (Exception ex)
         {
-            var logger = services.GetRequiredService<ILogger>();
+            var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("Program");
             logger.LogError(ex, "Migration process failed!");
         }
 
@@ -127,6 +127,8 @@ public static class Program
         builder.Services.AddDbContext<AppDbContext>(opt =>
         {
             opt.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection"));
+            opt.ConfigureWarnings(w =>
+                w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
         });
     }
 
