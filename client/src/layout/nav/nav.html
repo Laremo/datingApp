@@ -28,10 +28,13 @@
         >
         <a routerLink="/lists" routerLinkActive="text-accent">Lists</a>
         <a routerLink="/messages" routerLinkActive="text-accent">Messages</a>
-        <a routerLink="/admin" routerLinkActive="text-accent">Admin</a>
+        <a *appHasRole="['Admin', 'Moderator']" routerLink="/admin" routerLinkActive="text-accent"
+          >Admin</a
+        >
       }
       <a routerLink="/errors" routerLinkActive="text-accent">Errors</a>
     </nav>
+
     @if (busyService.busyRequestCount() > 0) {
       <span class="loading loading-spinner text-accent"></span>
     }
@@ -60,7 +63,7 @@
         </button>
         <ul
           tabindex="-1"
-          class="dropdown-content menu bg-base-100 rounded-box z-50 w-52 p-2 shadow-sm"
+          class="dropdown-content z-50 menu bg-base-100 rounded-box w-52 p-2 shadow-sm"
         >
           @for (theme of themes; track $index) {
             <li (click)="handleSelectedTheme(theme)">
