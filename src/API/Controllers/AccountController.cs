@@ -53,12 +53,12 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
                 BirthDay = request.BirthDay
             }
         };
-        
+
         var result = await userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
         {
-            foreach(var error in result.Errors)
+            foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("identity", error.Description);
             }
@@ -84,10 +84,12 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
         var user = await userManager.FindByEmailAsync(request.Email);
 
         if (user == null) return Unauthorized("Invalid email or password");
-        
+
         var result = await userManager.CheckPasswordAsync(user, request.Password);
 
         if (!result) return Unauthorized("Invalid username or password");
+
+        await userManager.AddToRoleAsync(user, "Member");
 
         return await user.ToDto(tokenService);
     }
