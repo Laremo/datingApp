@@ -17,7 +17,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<MemberLike>()
-                 .HasKey(m => new { m.SourceMemberId, m.TargetMemberId });
+            .HasKey(m => new { m.SourceMemberId, m.TargetMemberId });
 
         modelBuilder.Entity<MemberLike>()
             .HasOne(s => s.SourceMember)
@@ -32,9 +32,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Message>()
-                   .HasOne(m => m.Recipient)
-                   .WithMany(mr => mr.MessagesReceived)
-                   .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(m => m.Recipient)
+            .WithMany(mr => mr.MessagesReceived)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Message>()
             .HasOne(m => m.Sender)
@@ -48,10 +48,15 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<Message>()
             .Property(m => m.SenderDeleted)
             .HasDefaultValue(false);
-            
+
         var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
             v => v.ToUniversalTime(),
             v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+        );
+
+        var nullableDateTimeConverter = new ValueConverter<DateTime?, DateTime?>(
+            v => v.HasValue ? v.Value.ToUniversalTime() : null,
+            v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : null
         );
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -61,6 +66,10 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 if (property.ClrType == typeof(DateTime))
                 {
                     property.SetValueConverter(dateTimeConverter);
+                }
+                else if (property.ClrType == typeof(DateTime?))
+                {
+                    property.SetValueConverter(nullableDateTimeConverter);
                 }
             }
         }
