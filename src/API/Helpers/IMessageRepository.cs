@@ -11,5 +11,6 @@ public interface IMessagesRepository
     Task<Message?> Get(string messageId);
     Task<PaginationResult<MessageResponse>> GetForMember();
     Task<IReadOnlyList<MessageResponse>> GetThread(string currentMemberId, string recipientId);
+    Task<PaginationResult<MessageResponse>> GetForMember(MessageParams messageRequest);
     Task<bool> SaveAllAsync();
 }

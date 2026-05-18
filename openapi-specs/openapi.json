@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.6.2.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Dating API",
@@ -630,6 +630,36 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "operationId": "Messages_GetMessagesByContainer",
+        "requestBody": {
+          "x-name": "messageParams",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageParams"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationResultOfMessageResponse"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -638,12 +668,6 @@
       "UserResponse": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "email",
-          "displayName",
-          "token"
-        ],
         "properties": {
           "id": {
             "type": "string"
@@ -732,7 +756,8 @@
           },
           "birthDay": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "minLength": 1
           }
         }
       },
@@ -788,12 +813,6 @@
       "Member": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "displayName",
-          "gender",
-          "city",
-          "country"
-        ],
         "properties": {
           "id": {
             "type": "string"
@@ -835,9 +854,6 @@
       "Photo": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "url"
-        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -880,14 +896,6 @@
       "MessageResponse": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "senderId",
-          "senderDisplayName",
-          "recipientId",
-          "recipientDisplayName",
-          "content"
-        ],
         "properties": {
           "id": {
             "type": "string"
@@ -929,16 +937,73 @@
       "MessageRequest": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "recipientId",
-          "content"
-        ],
         "properties": {
           "recipientId": {
             "type": "string"
           },
           "content": {
             "type": "string"
+          }
+        }
+      },
+      "PaginationResultOfMessageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/PaginationMetadata"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageResponse"
+            }
+          }
+        }
+      },
+      "MessageParams": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PaginationRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "memberId": {
+                "type": "string",
+                "nullable": true
+              },
+              "container": {
+                "$ref": "#/components/schemas/ContainerTypes"
+              }
+            }
+          }
+        ]
+      },
+      "ContainerTypes": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Inbox",
+          "Outbox"
+        ],
+        "enum": [
+          "Inbox",
+          "Outbox"
+        ]
+      },
+      "PaginationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }
