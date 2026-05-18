@@ -2,11 +2,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Serialization;
 using API.Data;
+using API.Entities;
+using API.Helpers;
 using API.Interfaces;
 using API.Middlewares;
-using API.Helpers;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
@@ -36,30 +38,8 @@ public static class Program
 
         AddDbContext(builder);
         AddScopedServices(builder);
-
-        builder.Services.AddOpenApiDocument(options =>
-        {
-            options.PostProcess = document =>
-            {
-                document.Info = new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "Dating API",
-                    Description = "An ASP.NET Core Web API for managing Dating items",
-                    TermsOfService = "https://example.com/terms",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Example Contact",
-                        Url = "https://example.com/contact"
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Example License",
-                        Url = "https://example.com/license"
-                    }
-                };
-            };
-        });
+        AddOpenApiDocument(builder);
+        AddIdentity(builder);
 
         WebApplication app = builder.Build();
 
@@ -68,8 +48,9 @@ public static class Program
         try
         {
             var context = services.GetRequiredService<AppDbContext>();
+            var userManager = services.GetRequiredService<UserManager<AppUser>>();
             context.Database.Migrate();
-            Task.Run(() => Seed.SeedUsers(context));
+            Task.Run(() => Seed.SeedUsers(userManager));
         }
         catch (Exception ex)
         {
@@ -127,21 +108,58 @@ public static class Program
         builder.Services.AddDbContext<AppDbContext>(opt =>
         {
             opt.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection"));
-            opt.ConfigureWarnings(w =>
-                w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
         });
     }
 
     private static void AddScopedServices(WebApplicationBuilder builder)
     {
-        // Services & repositories
+        // Repositories and services
         builder.Services.AddScoped<IMembersRepository, MembersRepository>();
         builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
         builder.Services.AddScoped<ILikesRepository, LikesRepository>();
-        builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
 
+        // Other settings
         builder.Services.AddScoped<UserActivityLogger>();
         builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+    }
+
+    private static void AddOpenApiDocument(WebApplicationBuilder builder)
+    {
+        builder.Services.AddOpenApiDocument(options =>
+        {
+            options.PostProcess = document =>
+            {
+                document.Info = new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Dating API",
+                    Description = "An ASP.NET Core Web API for managing Dating items",
+                    TermsOfService = "https://example.com/terms",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Example Contact",
+                        Url = "https://example.com/contact"
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Example License",
+                        Url = "https://example.com/license"
+                    }
+                };
+            };
+        });
+    }
+
+    private static void AddIdentity(WebApplicationBuilder builder)
+    {
+        builder.Services.AddIdentityCore<AppUser>(opt =>
+        {
+            opt.Password.RequireNonAlphanumeric = false;
+            opt.User.RequireUniqueEmail = true;
+        })
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<AppDbContext>();
     }
 }
