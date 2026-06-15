@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v14.7.0.0 (NJsonSchema v11.6.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Dating API",
@@ -103,6 +103,108 @@
         }
       }
     },
+    "/api/Account/token": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_RefreshToken",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/users-with-roles": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "Admin_GetUsersWithRoles",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/roles/{userId}": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "Admin_EditRoles",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "roles",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/photos-to-moderate": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "Admin_GetPhotosForModeration",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Error/bad-request": {
       "get": {
         "tags": [
@@ -180,6 +282,26 @@
                 "schema": {
                   "type": "string",
                   "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Error/admin-secret": {
+      "get": {
+        "tags": [
+          "Error"
+        ],
+        "operationId": "Error_GetSecretAdmin",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -599,6 +721,159 @@
           }
         }
       }
+    },
+    "/api/Messages": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "operationId": "Messages_CreateMessage",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "operationId": "Messages_GetMessagesByContainer",
+        "parameters": [
+          {
+            "name": "MemberId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Container",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ContainerTypes"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationResultOfMessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Messages/thread/{recipientId}": {
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "operationId": "Messages_GetThread",
+        "parameters": [
+          {
+            "name": "recipientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessageResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Messages/{id}": {
+      "delete": {
+        "tags": [
+          "Messages"
+        ],
+        "operationId": "Messages_DeleteMessage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -614,24 +889,20 @@
         ],
         "properties": {
           "id": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "email": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "displayName": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "imageUrl": {
             "type": "string",
             "nullable": true
           },
           "token": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           }
         }
       },
@@ -779,8 +1050,7 @@
             "nullable": true
           },
           "displayName": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "created": {
             "type": "string",
@@ -791,20 +1061,17 @@
             "format": "date-time"
           },
           "gender": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "description": {
             "type": "string",
             "nullable": true
           },
           "city": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "country": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           }
         }
       },
@@ -820,8 +1087,7 @@
             "format": "int32"
           },
           "url": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "publicId": {
             "type": "string",
@@ -853,6 +1119,98 @@
             "nullable": true
           }
         }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "senderId",
+          "senderDisplayName",
+          "recipientId",
+          "recipientDisplayName",
+          "content"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "senderId": {
+            "type": "string"
+          },
+          "senderDisplayName": {
+            "type": "string"
+          },
+          "senderImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "recipientId": {
+            "type": "string"
+          },
+          "recipientDisplayName": {
+            "type": "string"
+          },
+          "recipientImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "content": {
+            "type": "string"
+          },
+          "dateRead": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "messageSent": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MessageRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "recipientId",
+          "content"
+        ],
+        "properties": {
+          "recipientId": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginationResultOfMessageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/PaginationMetadata"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageResponse"
+            }
+          }
+        }
+      },
+      "ContainerTypes": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Inbox",
+          "Outbox"
+        ],
+        "enum": [
+          "Inbox",
+          "Outbox"
+        ]
       }
     }
   }
