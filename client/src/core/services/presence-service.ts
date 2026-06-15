@@ -22,24 +22,24 @@ export class PresenceService {
       .build();
 
       this.hubConnection.start()
-        .catch(error => console.log(error));
+        .catch((error: unknown) => console.log(error));
 
-      this.hubConnection.on('UserOnline', userId => {
+      this.hubConnection.on('UserOnline', (userId: string) => {
         this.onlineUsers.update(users => [...users, userId]);
       });
 
-      this.hubConnection.on('UserOffline', userId => {
+      this.hubConnection.on('UserOffline', (userId: string) => {
         this.onlineUsers.update(users => users.filter(u => u !== userId))
       });
 
-      this.hubConnection.on('GetOnlineUsers', userIds => {
+      this.hubConnection.on('GetOnlineUsers', (userIds: string[]) => {
         this.onlineUsers.set(userIds);
       })
   }
 
   stopHubConnection() {
     if (this.hubConnection?.state === HubConnectionState.Connected) {
-      this.hubConnection.stop().catch(error => console.log(error));
+      this.hubConnection.stop().catch((error: unknown) => console.log(error));
     }
   }
 }
